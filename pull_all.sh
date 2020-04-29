@@ -56,7 +56,7 @@ for repo in $(cat ../repos.txt); do
         echo $repo_dir exists, pulling
         if action_update_existing &> ../$repo_dir.log; then
           rm ../$repo_dir.log
-          echo $repo_dir OK
+          printf '%s OK, current branch %s\n' $repo_dir $(git branch --show-current)
           cd ..
           ok=1
         else
@@ -79,7 +79,7 @@ for repo in $(cat ../repos.txt); do
         if [[ ! -z "$repo_oldxattr" ]]; then
           restore_xattr "$repo_dir" $repo_oldxattr
         fi
-        echo $repo_dir OK
+        printf '%s OK, current branch %s\n' $repo_dir $(git branch --show-current)
       else
         echo $repo_dir FAIL
       fi
