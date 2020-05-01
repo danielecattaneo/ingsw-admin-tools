@@ -76,10 +76,11 @@ for repo in $(cat ../repos.txt); do
       echo $repo_dir cloning fresh
       if git clone ${repo_url} ${repo_dir} &> $repo_dir.log; then
         rm $repo_dir.log
+        printf 'DEBUG: %s' ${repo_oldxattr}
         if [[ ! -z "$repo_oldxattr" ]]; then
           restore_xattr "$repo_dir" $repo_oldxattr
         fi
-        printf '%s OK, current branch %s\n' $repo_dir $(git branch --show-current)
+        printf '%s OK, current branch %s\n' $repo_dir $(cd ${repo_dir}; git branch --show-current)
       else
         echo $repo_dir FAIL
       fi
