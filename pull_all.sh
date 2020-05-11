@@ -47,10 +47,10 @@ for repo in $(cat ../repos.txt); do
       #### REPOSITORY EXISTS
       cd $repo_dir
       existing_url=$(git remote get-url --all origin)
+      repo_oldxattr=$(save_xattr "$repo_dir")
       if [[ $existing_url != $repo_url ]]; then
         echo $repo_dir URL has changed, re-cloning
         cd ..
-        repo_oldxattr=$(save_xattr "$repo_dir")
         rm -rf $repo_dir
       else
         echo $repo_dir exists, pulling
