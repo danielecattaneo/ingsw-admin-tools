@@ -6,8 +6,12 @@ save_xattr()
   if [[ $(uname -s) != 'Darwin' ]]; then return 0; fi
   f="$1"
   for attr_name in com.apple.FinderInfo com.apple.metadata:_kMDItemUserTags; do
-    xattr -px ${attr_name} ${f} | tr -d ' \n'
-    echo
+    xattr -px ${attr_name} ${f} 2> /dev/null | tr -d ' \n'
+    if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
+      echo
+    else
+      echo Z
+    fi
   done
 }
 
@@ -18,8 +22,12 @@ restore_xattr()
   f="$1"
   shift
   for attr_name in com.apple.FinderInfo com.apple.metadata:_kMDItemUserTags; do
-    attr_data=$(echo $1 | sed -E 's/../& /g')
-    xattr -wx "$attr_name" "$attr_data" "$f"
+    if [[ $1 != 'Z' ]]; then
+      attr_data=$(echo $1 | sed -E 's/../& /g')
+      xattr -wx "$attr_name" "$attr_data" "$f"
+    else
+      xattr -d "$attr_name" "$f" 2> /dev/null
+    fi
     shift
   done
 }
@@ -45,9 +53,9 @@ for repo in $(cat ../repos.txt); do
   while [[ $ok -eq 0 ]]; do
     if [[ -e $repo_dir ]]; then
       #### REPOSITORY EXISTS
+      repo_oldxattr=$(save_xattr "$repo_dir")
       cd $repo_dir
       existing_url=$(git remote get-url --all origin)
-      repo_oldxattr=$(save_xattr "$repo_dir")
       if [[ $existing_url != $repo_url ]]; then
         echo $repo_dir URL has changed, re-cloning
         cd ..
