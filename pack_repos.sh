@@ -4,7 +4,7 @@ formatted_date=$(date +%Y%m%d_%H%M)
 
 if [[ $# -gt 0 ]]; then
   for gid in "$@"; do
-    group_dirs="$group_dirs group_$gid"
+    group_dirs="$group_dirs group_$(printf '%02d' $gid)"
   done
   repos_trail=_not_complete_
 else
@@ -23,7 +23,10 @@ for group in $group_dirs; do
   elif [[ -d "$group/.git" ]]; then
     cd "$group"
     this_temp_tar=$(mktemp).tar
-    git archive --prefix="$group/" -o "$this_temp_tar" HEAD
+    if git archive --prefix="$group/" -o "$this_temp_tar" HEAD; then echo > /dev/null; else
+      echo ERROR!
+      exit 1
+    fi
     tar -rf "$temp_tar" "@$this_temp_tar"
     rm -f "$this_temp_tar"
     cd ..
