@@ -84,7 +84,6 @@ for repo in $(cat ../repos.txt); do
       echo $repo_dir cloning fresh
       if git clone ${repo_url} ${repo_dir} &> $repo_dir.log; then
         rm $repo_dir.log
-        printf 'DEBUG: %s' ${repo_oldxattr}
         if [[ ! -z "$repo_oldxattr" ]]; then
           restore_xattr "$repo_dir" $repo_oldxattr
         fi
