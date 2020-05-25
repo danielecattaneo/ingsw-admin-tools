@@ -6,6 +6,10 @@ STATS_DIRS = $(patsubst $(REPOS_DIR)/%, $(STATS_DIR)/%, $(wildcard $(REPOS_DIR)/
 
 stats: $(STATS_DIRS)
 
+.PHONY: repos
+repos:
+	./pull_all.sh
+
 .PHONY: $(STATS_DIR)/%
 $(STATS_DIR)/%:
 	mkdir -p $(STATS_DIR)
