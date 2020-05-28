@@ -99,6 +99,9 @@ while [[ $# -gt 0 ]]; do
     --use-ramdisk)
       USE_RAMDISK=1;;
       
+    --log)
+      shift; LOG="$1";;
+      
     *)
       printf 'unrecognized argument %s!\n' "$1";
       exit 1;;
@@ -124,7 +127,7 @@ mkdir -p "$TMP_REPOS_DIR"
 
 gen_command()
 {
-  printf 'process_one "%s" "%s" "%s" >> "%s" 2>&1\n' "$1" "$TMP_REPOS_DIR/$2" "$REPOS_DIR/$2" "$LOG"
+  printf 'process_one "%s" "%s" "%s" 2>&1\n' "$1" "$TMP_REPOS_DIR/$2" "$REPOS_DIR/$2"
 }
 
 if [[ ! ( -z "$CACHE" ) ]]; then
@@ -143,6 +146,6 @@ else
 fi
 
 export -f process_one
-parallel --bar < "$TEMP_DIR"/_commands.txt
+parallel --bar < "$TEMP_DIR"/_commands.txt >> "$LOG"
 cleanup
 
