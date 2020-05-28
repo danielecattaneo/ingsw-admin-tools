@@ -39,11 +39,34 @@ action_update_existing()
 }
 
 
-mkdir -p repos
-cd repos
+REPOS_DIR=repos
+REPOS_FILE=repos.txt
+GIT_OPT_CLONE=
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --repos-dir)
+      shift; REPOS_DIR="$1";;
+    --repos-file)
+      shift; REPOS_FILE="$1";;
+    --bare)
+      GIT_OPT_CLONE="$GIT_OPT_CLONE --bare";;
+    *)
+      printf 'unrecognized argument %s!\n' "$1";
+      exit 1;;
+  esac
+  shift
+done
+
+
+REPOS_FILE=$(realpath "$REPOS_FILE")
+
+mkdir -p "$REPOS_DIR"
+REPOS_DIR=$(realpath "$REPOS_DIR")
+cd "$REPOS_DIR"
 
 i=1
-for repo in $(cat ../repos.txt); do
+for repo in $(cat "$REPOS_FILE"); do
   repo_url="${repo%.git}.git"
   repo_dir=$(printf "group_%02d" $i)
   repo_oldxattr=
@@ -82,7 +105,7 @@ for repo in $(cat ../repos.txt); do
     else
       ### NEW REPOSITORY
       echo $repo_dir cloning fresh
-      if git clone ${repo_url} ${repo_dir} &> $repo_dir.log; then
+      if git clone $GIT_OPT_CLONE ${repo_url} ${repo_dir} &> $repo_dir.log; then
         rm $repo_dir.log
         if [[ ! -z "$repo_oldxattr" ]]; then
           restore_xattr "$repo_dir" $repo_oldxattr
