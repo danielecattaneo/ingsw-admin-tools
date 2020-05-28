@@ -109,7 +109,7 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-if [[ -nz $USE_RAMDISK ]]; then
+if [[ $USE_RAMDISK -ne 0 ]]; then
   TEMP_DIR=$(use_ramdisk "$CACHE")
 fi
 if [[ -z "$TEMP_DIR" ]]; then
