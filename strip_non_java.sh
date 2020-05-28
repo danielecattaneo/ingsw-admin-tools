@@ -63,13 +63,21 @@ use_ramdisk()
 }
 
 
+cleanup()
+{
+  echo Cleaning up...
+  rm -rf "$TEMP_DIR"
+}
+
+
 check_dependency realpath
 check_dependency parallel
+
+trap 'cleanup' SIGINT
 
 REPOS_DIR=repos_stripped
 REPOS_FILE=repos.txt
 TEMP_DIR=
-GIT_OPT_CLONE=
 CACHE=
 LOG=/dev/null
 USE_RAMDISK=0
@@ -136,5 +144,5 @@ fi
 
 export -f process_one
 parallel --bar < "$TEMP_DIR"/_commands.txt
-rm -rf "$TEMP_DIR"
+cleanup
 
