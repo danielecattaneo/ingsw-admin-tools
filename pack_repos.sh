@@ -1,6 +1,35 @@
 #!/bin/bash
 
-formatted_date=$(date +%Y%m%d_%H%M)
+
+check_dependency()
+{
+  if [[ ! ( -e $(which $1) ) ]]; then
+    echo "$1 not found in PATH, please install it"
+  fi  
+}
+
+
+check_dependency realpath
+
+repos_dir=repos
+output_tar=
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --repos-dir)
+      shift; repos_dir=$(realpath "$1");;
+    -o | --output)
+      shift; output_tar=$(realpath "$1");;
+    --)
+      shift; break;;
+    --*)
+      printf 'unrecognized argument %s!\n' "$1";
+      exit 1;;
+    *)
+      break;;
+  esac
+  shift
+done
 
 if [[ $# -gt 0 ]]; then
   for gid in "$@"; do
@@ -12,25 +41,29 @@ else
   repos_trail=_
 fi
 
-temp_tar=$(pwd)/repos${repos_trail}${formatted_date}.tar
-tar -cf "$temp_tar" -T /dev/null
+if [[ -z "$output_tar" ]]; then
+  formatted_date=$(date +%Y%m%d_%H%M)
+  output_tar=$(pwd)/repos${repos_trail}${formatted_date}.tar
+fi
 
-cd repos
+tar -cf "$output_tar" -T /dev/null
+
+cd "$repos_dir"
 for group in $group_dirs; do
   echo $group
   if [[ -f "$group" ]]; then
-    tar -rf "$temp_tar" "$group"
+    tar -rf "$output_tar" "$group"
   elif [[ -d "$group/.git" ]]; then
     cd "$group"
-    this_temp_tar=$(mktemp).tar
-    if git archive --prefix="$group/" -o "$this_temp_tar" HEAD; then echo > /dev/null; else
+    this_output_tar=$(mktemp).tar
+    if git archive --prefix="$group/" -o "$this_output_tar" HEAD; then echo > /dev/null; else
       echo ERROR!
       exit 1
     fi
-    tar -rf "$temp_tar" "@$this_temp_tar"
-    rm -f "$this_temp_tar"
+    tar -rf "$output_tar" "@$this_output_tar"
+    rm -f "$this_output_tar"
     cd ..
   fi
 done
 
-bzip2 -9 $temp_tar
+bzip2 -9 $output_tar
