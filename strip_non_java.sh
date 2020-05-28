@@ -95,16 +95,20 @@ while [[ $# -gt 0 ]]; do
       shift; REPOS_DIR="$1";;
       
     --repos-file)
+      CACHE=;
       shift; REPOS_FILE="$1";;
       
     --use-cache)
+      REPOS_FILE=;
       shift; CACHE=$(realpath "$1");;
     
     --temp-dir)
+      USE_RAMDISK=0;
       shift; TEMP_DIR="$1";;
       
     --use-ramdisk)
-      USE_RAMDISK=1;;
+      USE_RAMDISK=1;
+      TEMP_DIR=;;
       
     --log)
       shift; LOG="$1";;
