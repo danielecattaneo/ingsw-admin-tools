@@ -16,7 +16,7 @@ process_one()
   repo_dest_dir="$3"
   
   # clone as bare repo in temporary dir
-  git clone "$repo_origin" "$repo_tmp_dir"
+  git clone --mirror "$repo_origin" "$repo_tmp_dir"
   
   # rewrite history in temporary copy
   cd "$repo_tmp_dir"
@@ -30,7 +30,14 @@ process_one()
   
   # clone temporary copy to destination
   rm -rf "$repo_dest_dir"
-  git clone "$repo_tmp_dir" "$repo_dest_dir"
+  mkdir "$repo_dest_dir"
+  cd "$repo_dest_dir"
+  git clone --mirror "$repo_tmp_dir" .git
+  cd .git
+  git config --bool core.bare false
+  cd ..
+  git checkout master
+  git remote rm origin
   
   # cleanup
   rm -rf "$repo_tmp_dir"
