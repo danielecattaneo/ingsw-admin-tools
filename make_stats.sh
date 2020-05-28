@@ -21,6 +21,7 @@ process_one()
 
 check_dependency parallel
 check_dependency realpath
+check_dependency gitstats
 
 repos_dir=repos
 stats_dir=stats
