@@ -1,6 +1,14 @@
 #!/bin/bash
 
 
+check_dependency()
+{
+  if [[ ! ( -e $(which $1) ) ]]; then
+    echo "$1 not found in PATH, please install it"
+  fi  
+}
+
+
 save_xattr()
 {
   if [[ $(uname -s) != 'Darwin' ]]; then return 0; fi
@@ -38,6 +46,8 @@ action_update_existing()
   git pull
 }
 
+
+check_dependency realpath
 
 REPOS_DIR=repos
 REPOS_FILE=repos.txt
