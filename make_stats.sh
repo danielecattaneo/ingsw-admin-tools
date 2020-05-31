@@ -43,14 +43,19 @@ mkdir -p "$stats_dir"
 repos_dir=$(realpath "$repos_dir")
 stats_dir=$(realpath "$stats_dir")
 
+index_file="$stats_dir"/index.html
+
 make_process_list()
 {
   cd "$repos_dir"
   for repo in group_??; do
     printf 'process_one %s %s 2>&1\n' "$repos_dir/$repo" "$stats_dir/$repo"
+    echo '<a href="'"$repo"'/index.html"><b>'"$repo"'</b></a> <a href="'"$repo"'/authors.html">authors</a><br>' >> "$index_file"
   done
 }
 
 export -f process_one
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>stats index</title></head><body>' > "$index_file"
 make_process_list | parallel --bar > test.log
+echo '</body></html>' >> "$index_file"
 
