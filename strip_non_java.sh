@@ -20,12 +20,7 @@ process_one()
   
   # rewrite history in temporary copy
   cd "$repo_tmp_dir"
-  git filter-branch --index-filter 'git rm -r --cached --ignore-unmatch '"'"':!*.java'"'"'' -- --all
-  rm -rf refs/original
-  git reflog expire --expire=now --all
-  git fsck --full --unreachable
-  git repack -A -d
-  git gc --aggressive --prune=now
+  git filter-repo --force --path-glob '*.java'
   cd ..
   
   # clone temporary copy to destination
