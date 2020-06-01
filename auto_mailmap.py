@@ -120,13 +120,14 @@ def main():
   parser = argparse.ArgumentParser(description='Automatically produces mailmap '
       'from git repos using string similarity algorithms.')
   parser.add_argument('--repos', dest='repos', type=str, default='repos',
-      help='Root directory of the repository list')
+      help='root directory containing all repositories (expected same name format '+\
+           'as produced by pull_all.sh')
   parser.add_argument('--base', dest='base', type=str, default='mailmap_base.txt',
-      help='Base mailmap file.')
+      help='base mailmap file')
   parser.add_argument('--output', dest='output', type=str, default='mailmap.txt',
-      help='Output mailmap file.')
+      help='output mailmap file')
   parser.add_argument('--verbose', dest='verbose', type=int, default=0,
-      help='Logging level (0 to 4)', choices=range(0, 5))
+      help='logging level (0 to 4)', choices=range(0, 5))
   args = parser.parse_args()
 
   log.basicConfig(level=50-args.verbose*10, stream=sys.stderr)
