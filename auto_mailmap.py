@@ -39,7 +39,7 @@ def parse_committer(mailmap_entry: str):
   if name == 'GitHub':
     return {}
   mail = m.group(2).strip()
-  return {name: mail}
+  return (name, mail)
 
 
 class Repository:
@@ -51,7 +51,7 @@ class Repository:
     self.repo = repo
     list_committers=map(lambda x: parse_committer(x), rawmap.strip().split('\t'))
     for committer in list_committers:
-      self.destination_mailmap.update(committer)
+      self.destination_mailmap.update({committer[0]: committer[1]})
 
 
   def get_current_mailmap_from_git(self):
@@ -59,9 +59,9 @@ class Repository:
     gitp = subprocess.run([gitpath, 'shortlog', '-sne', '--all'], stdout=subprocess.PIPE, check=True, cwd=str(self.repo))
     output = gitp.stdout.decode('utf-8').splitlines()
     list_committers = map(lambda x: parse_committer(x), output)
-    res = {}
+    res = []
     for committer in list_committers:
-      res.update(committer)
+      res.append(committer)
     return res
 
 
@@ -73,7 +73,7 @@ class Repository:
 
     new_names_matched = set()
 
-    for old_name, old_mail in old_mailmap.items():
+    for old_name, old_mail in old_mailmap:
       best_name = "UNK"
       best_mail = "UNK"
       best_name_score = 0
