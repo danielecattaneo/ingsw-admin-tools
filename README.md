@@ -80,6 +80,7 @@ Rewrites history of all repositories to remove all non Java source code files. U
 * `--repos-file <file>`: Tells the tool to process the repositories listed in the given file. This is the default behavior, and the default file name is `./repos.txt`
 * `--use-cache <dir>`: Tells the tool to process the repositories from an already existing `./repos` directory. This option overrides `--repos-file`. Note that this tool expects a directory produced by `pull-all.sh`.
 * `--repos-dir <dir>`: Changes the directory where the processed repositories are saved to the given one. Default directory is `repos_stripped`.
+* `--use-mailmap <file>`: Allows remapping the mails in all the repositories according to the single mailmap-formatted file given (see [the git documentation](https://git-scm.com/docs/git-check-mailmap) for more info about mailmap files).
 * `--temp-dir <dir>`: Changes the temporary directory to use to the given one. **THE TEMPORARY DIRECTORY IS DELETED ON EXIT OR SIGINT (CTRL+C)**. By default a new temporary directory is created using `mktemp`.
 * `--use-ramdisk` Moves the temporary directory to a newly-created ramdisk. Make sure you have a lot of RAM, even though this tool tries to save disk space when it can. When in doubt, don't use this. This option overrides `--temp-dir`.
 * `--log <file>` Outputs a log to the specified file. Logs tend to be very large. When in doubt, don't use this.

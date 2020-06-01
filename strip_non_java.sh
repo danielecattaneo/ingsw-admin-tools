@@ -11,16 +11,23 @@ check_dependency()
 
 process_one()
 {
+  set -x
+  
   repo_origin="$1"
   repo_tmp_dir="$2"
   repo_dest_dir="$3"
+  mailmap="$4"
   
   # clone as bare repo in temporary dir
   git clone --mirror "$repo_origin" "$repo_tmp_dir"
   
   # rewrite history in temporary copy
   cd "$repo_tmp_dir"
-  git filter-repo --force --path-glob '*.java'
+  if [[ -z "$mailmap" ]]; then
+    git filter-repo --force --path-glob '*.java'
+  else
+    git filter-repo --force --path-glob '*.java' --mailmap "$mailmap"
+  fi
   cd ..
   
   # clone temporary copy to destination
@@ -83,6 +90,7 @@ TEMP_DIR=
 CACHE=
 LOG=/dev/null
 USE_RAMDISK=0
+MAILMAP=
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -104,6 +112,9 @@ while [[ $# -gt 0 ]]; do
     --use-ramdisk)
       USE_RAMDISK=1;
       TEMP_DIR=;;
+      
+    --use-mailmap)
+      shift; MAILMAP=$(realpath "$1");;
       
     --log)
       shift; LOG="$1";;
@@ -133,7 +144,7 @@ mkdir -p "$TMP_REPOS_DIR"
 
 gen_command()
 {
-  printf 'process_one "%s" "%s" "%s" 2>&1\n' "$1" "$TMP_REPOS_DIR/$2" "$REPOS_DIR/$2"
+  printf 'process_one "%s" "%s" "%s" "%s" 2>&1\n' "$1" "$TMP_REPOS_DIR/$2" "$REPOS_DIR/$2" "$MAILMAP"
 }
 
 if [[ ! ( -z "$CACHE" ) ]]; then
