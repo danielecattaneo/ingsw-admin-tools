@@ -84,3 +84,30 @@ Rewrites history of all repositories to remove all non Java source code files. U
 * `--temp-dir <dir>`: Changes the temporary directory to use to the given one. **THE TEMPORARY DIRECTORY IS DELETED ON EXIT OR SIGINT (CTRL+C)**. By default a new temporary directory is created using `mktemp`.
 * `--use-ramdisk` Moves the temporary directory to a newly-created ramdisk. Make sure you have a lot of RAM, even though this tool tries to save disk space when it can. When in doubt, don't use this. This option overrides `--temp-dir`.
 * `--log <file>` Outputs a log to the specified file. Logs tend to be very large. When in doubt, don't use this.
+
+## `auto_mailmap.py`
+
+Reads the list of committers in each repository, compares it with an exhaustive list of known committers, and maps each committer in the first list to a committer in the second list.
+
+The target use case is when an inexperienced student screws up and uses multiple e-mails and user names when committing. Since the majority of students are inexperienced like that, reading commit statistics becomes error-prone.
+
+By using [mailmap](https://git-scm.com/docs/git-check-mailmap) files, on our end it is possible to fix up mails -- either at stat collection time, or by rewriting the repository.
+However, making a mailmap for each student alias is unfeasible if the number of students is in the hundreds...
+
+This tool makes producing these mailmaps automatic as much as possible.
+
+In input, `auto_mailmap.py` requires a **base mailmap** file, which is formatted like this:
+
+* Each line in the file corresponds to a repository
+* In each line, each mail specification corresponding to that repository is separated by tab (`\t`) characters
+* Mail specifications are formatted like you expect (`Name Surname <and.their.email@some.provider.com>`)
+
+The mail specifications in the base mailmap are those which will appear when mail-mapping the repository.
+
+The output mailmap contains comments specifying the level of confidence of each match.
+Since the set of possibilities tends to be limited, even a confidence as low as 40% often produces correct matches.
+Mails in the base mailmap which could not be matched with none of the mails in the repository commit history are also reported in the comments (search for the word `ORPHAN` in the mailmap file).
+
+### Usage
+
+Please use `auto_mailmap.py --help` to show usage info.
