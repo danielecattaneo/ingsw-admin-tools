@@ -69,7 +69,7 @@ class Repository:
     old_mailmap = self.get_current_mailmap_from_git()
 
     log.info("repo = " + str(self.repo))
-    res = ''
+    res = '# ' + str(self.repo) + '\n'
 
     new_names_matched = set()
 
