@@ -52,7 +52,7 @@ Packs repositories 7, 14, 28 and 42 in a file named `repos_not_complete_<DATE>_<
 
 ## `make_stats.sh`
 
-Generates statistics for all repositories using `gitstats`.
+Generates statistics for all repositories using `gitstats`. Also checks deadline compliance (the deadline info is shown in the index of the stats directory).
 
 ### Usage
 
@@ -62,6 +62,7 @@ Generates statistics for all repositories using `gitstats`.
 
 * `--repos-dir <dir>`: Changes the directory of repositories to analyze from `./repos` to the specified one. Note that this tool expects a directory produced by `pull-all.sh`.
 * `-o <dir>`, `--output <dir>`: Changes the default destination directory to the given one.
+* `-d <unix-time>`, `--deadline <unix-time>`: Sets the deadline date to the specified UNIX timestamp (seconds after 1970-01-01).
 
 ## `strip_non_java.sh`
 
