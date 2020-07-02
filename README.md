@@ -112,3 +112,15 @@ Mails in the base mailmap which could not be matched with none of the mails in t
 ### Usage
 
 Please use `auto_mailmap.py --help` to show usage info.
+
+## `sonar_all.sh`
+
+Runs a SonarQube analysis on all repositories and uploads it to the Sonar server at localhost:9000.
+
+### Usage
+
+`./sonar_all.sh [OPTIONS]`
+
+**Options:**
+
+* `--repos-dir <dir>`: Changes the directory where the repositories are located. Default directory is `repos`.
