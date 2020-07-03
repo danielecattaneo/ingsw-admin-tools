@@ -51,4 +51,4 @@ make_process_list()
 }
 
 export -f do_project
-make_process_list | parallel --bar > sonar.log
+make_process_list | parallel --bar > sonar_all.log

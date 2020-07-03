@@ -75,7 +75,7 @@ echo '<head><meta charset="UTF-8"><style>td { text-align: center; }</style><titl
 echo '<body><table><tr>' >> "$index_file"
 echo '<th>Index</th><th>Authors</th><th>Last commit</th><th>Deadline Status</th>' >> "$index_file"
 echo '</tr>' >> "$index_file"
-make_process_list | parallel --bar > test.log
+make_process_list | parallel --bar > make_stats.log
 echo '</table>' >> "$index_file"
 echo '</body></html>' >> "$index_file"
 
