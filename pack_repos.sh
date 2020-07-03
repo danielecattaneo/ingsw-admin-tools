@@ -19,7 +19,9 @@ while [[ $# -gt 0 ]]; do
     --repos-dir)
       shift; repos_dir=$(realpath "$1");;
     -o | --output)
-      shift; output_tar=$(realpath "$1");;
+      shift; output_tar="$1";;
+    -p | --prefix)
+      shift; prefix="$1";;
     --)
       shift; break;;
     --*)
@@ -47,6 +49,7 @@ if [[ -z "$output_tar" ]]; then
 fi
 
 tar -cf "$output_tar" -T /dev/null
+output_tar=$(realpath "$output_tar")
 
 cd "$repos_dir"
 for group in $group_dirs; do
