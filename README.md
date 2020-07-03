@@ -38,6 +38,7 @@ The default file name of the tarball contains the current time and date.
 
 * `--repos-dir <dir>`: Changes the directory of repositories to pack from `./repos` to the specified one. Note that this tool expects a directory produced by `pull-all.sh`.
 * `-o <file>`, `--output <file>`: Changes the default destination filename to the given one.
+* `-p <prefix>`, `--prefix <prefix>`: Changes the repository directory name prefix to the specified one. The default is "group\_XX" where "XX" stands for the repository serial number. Only the "group\_" part is replaced by this option. 
 
 **Examples:**
 

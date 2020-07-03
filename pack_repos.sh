@@ -13,6 +13,7 @@ check_dependency realpath
 
 repos_dir=repos
 output_tar=
+prefix=
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -58,8 +59,13 @@ for group in $group_dirs; do
     tar -rf "$output_tar" "$group"
   elif [[ -d "$group/.git" ]]; then
     cd "$group"
+    if [[ ! ( -z "$prefix" ) ]]; then
+      dest_prefix=$(echo "$group" | sed -E 's/group_/'"$prefix"'/g')'/'
+    else
+      dest_prefix="$group/"
+    fi
     this_output_tar=$(mktemp).tar
-    if git archive --prefix="$group/" -o "$this_output_tar" HEAD; then echo > /dev/null; else
+    if git archive --prefix="$dest_prefix" -o "$this_output_tar" HEAD; then echo > /dev/null; else
       echo ERROR!
       exit 1
     fi
