@@ -19,7 +19,14 @@ do_project() {
     return 1
   fi
   cd $(dirname $pompath)
-  mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar \
+  mvn \
+    clean \
+    compile \
+    org.jacoco:jacoco-maven-plugin:0.8.6:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.6:report
+  mvn \
+    org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar \
+      -Dsonar.coverage.jacoco.xmlReportPaths='${project.build.directory}/site/jacoco/jacoco.xml' \
+      -Dsonar.jacoco.reportsPaths='${project.build.directory}/jacoco.exec' \
       -Dsonar.host.url=http://localhost:9000 \
       -Dsonar.projectKey=$pname \
       -Dsonar.projectName=$pname \
