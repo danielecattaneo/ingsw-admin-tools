@@ -16,6 +16,18 @@ process_one()
   rm -rf "$repo_stat_dir"
   mkdir -p "$repo_stat_dir"
   gitstats "$repo_dir" "$repo_stat_dir"
+  
+  grp_name=$(basename "$repo_dir")
+  grp_num=${grp_name##*_}
+  grp_num=$((10#$grp_num))
+  new_authors=\
+'\<a href="..\/index.html"\>Index\<\/a\> '\
+'\<a href="..\/group_'$(printf "%02d" "$((grp_num-1))")'\/authors.html"\>\&lt; Previous\<\/a\>'\
+" ${grp_name} "\
+'\<a href="..\/group_'$(printf "%02d" "$((grp_num+1))")'\/authors.html"\>Next \&gt;\<\/a\>'\
+'\<h1\>Authors\<\/h1\>'
+  mv "$repo_stat_dir/authors.html" "$repo_stat_dir/orig_authors.html"
+  cat "$repo_stat_dir/orig_authors.html" | sed -E -e 's/<h1>Authors<\/h1>/'"$new_authors"'/g' > "$repo_stat_dir/authors.html"
 }
 
 
