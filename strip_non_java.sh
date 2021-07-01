@@ -38,7 +38,7 @@ process_one()
   cd .git
   git config --bool core.bare false
   cd ..
-  git checkout master
+  git checkout $(git branch --show-current)
   git remote rm origin
   
   # cleanup
